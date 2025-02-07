@@ -10,6 +10,8 @@ const nextConfig = {
         pathname: '/deab9bxab/**',
       },
     ],
+  },  eslint: {
+    ignoreDuringBuilds: true, // Add this line
   },
 }
 

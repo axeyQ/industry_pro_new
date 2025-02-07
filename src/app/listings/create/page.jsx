@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { FaCloudUploadAlt, FaPlus, FaTimes } from 'react-icons/fa';
+import Image from 'next/image';
 
 export default function CreateListing() {
   const { data: session, status } = useSession();
@@ -245,7 +246,9 @@ export default function CreateListing() {
               <div className="grid grid-cols-4 gap-4 mb-4">
                 {images.map((url, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
+                      width={200}
+                      height={200}
                       src={url}
                       alt={`Image ${index + 1}`}
                       className="w-full h-24 object-cover rounded-lg"
