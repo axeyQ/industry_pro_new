@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import cloudinary from 'cloudinary';
+import { writeFile } from 'fs/promises';
+import { v2 as cloudinary } from 'cloudinary';
+import path from 'path';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -29,31 +31,21 @@ export async function POST(request) {
       );
     }
 
-    // Convert file to buffer
+    // Create a temporary file
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const tempFilePath = path.join('/tmp', `${Date.now()}-${file.name}`);
+    await writeFile(tempFilePath, buffer);
 
     // Upload to Cloudinary
-    const uploadPromise = new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.v2.uploader.upload_stream(
-        {
-          folder: 'business_logos',
-          allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-          transformation: [
-            { width: 400, height: 400, crop: 'limit' },
-            { quality: 'auto' }
-          ]
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-
-      uploadStream.end(buffer);
+    const result = await cloudinary.uploader.upload(tempFilePath, {
+      folder: 'business_logos',
+      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+      transformation: [
+        { width: 400, height: 400, crop: 'limit' },
+        { quality: 'auto' }
+      ]
     });
-
-    const result = await uploadPromise;
 
     return NextResponse.json({
       success: true,
