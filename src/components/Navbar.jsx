@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import UserMenu from './auth/UserMenu';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -16,8 +17,8 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white dark:bg-gray-900 transition-colors duration-200">
+      <div className="container mx-auto px-4">
         <div className="flex justify-between h-16">
           {/* Logo and primary nav */}
           <div className="flex">
@@ -49,7 +50,8 @@ export default function Navbar() {
           </div>
 
           {/* Right side buttons */}
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center gap-4">
+            <ThemeToggle />
             {status === 'loading' ? (
               <div className="h-8 w-8 animate-spin rounded-full border-t-2 border-b-2 border-blue-500" />
             ) : session ? (
@@ -72,6 +74,7 @@ export default function Navbar() {
                 Sign in
               </Link>
             )}
+
           </div>
 
           {/* Mobile menu button */}
