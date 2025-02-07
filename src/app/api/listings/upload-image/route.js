@@ -9,6 +9,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+// Instead, use the new route segment config
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(request) {
   try {
     const session = await getServerSession();
@@ -66,10 +70,4 @@ export async function POST(request) {
       { status: 500 }
     );
   }
-}
-
-export const config = {
-  api: {
-    bodyParser: false
-  }
-}; 
+} 
