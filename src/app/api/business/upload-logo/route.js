@@ -38,9 +38,9 @@ export async function POST(request) {
       const uploadStream = cloudinary.v2.uploader.upload_stream(
         {
           folder: 'business_logos',
-          allowed_formats: ['jpg', 'png', 'jpeg'],
+          allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
           transformation: [
-            { width: 500, height: 500, crop: 'fill' },
+            { width: 400, height: 400, crop: 'limit' },
             { quality: 'auto' }
           ]
         },
@@ -55,17 +55,14 @@ export async function POST(request) {
 
     const result = await uploadPromise;
 
-    return NextResponse.json(
-      { 
-        success: true, 
-        url: result.secure_url 
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: true,
+      url: result.secure_url
+    });
   } catch (error) {
-    console.error('Logo upload error:', error);
+    console.error('Error uploading logo:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to upload logo' },
+      { success: false, message: 'Error uploading logo' },
       { status: 500 }
     );
   }
