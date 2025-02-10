@@ -25,11 +25,24 @@ export default function UserMenu() {
             className="rounded-full"
           />
         )}
-        <span>{session.user.name}</span>
+        {/* <span>{session.user.name}</span> */}
       </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+        <div className="flex flex-col items-center justify-center mb-3">
+        {session.user.image && (
+          <Image
+            src={session.user.image}
+            alt={session.user.name}
+            width={60}
+            height={60}
+            className="rounded-full mb-2"
+          />
+        )}
+        <span className='text-base font-medium text-gray-700'>{session.user.name}</span>
+        <span className=' text-xs text-gray-700'>{session.user.email}</span>
+        </div>
           <Link
             href="/profile"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import BlogCard from '@/components/BlogCard';
+import { HomeCard } from '@/components/HomeCard';
 
 async function getBlogsByCategory(category) {
   try {
@@ -27,18 +28,16 @@ export default async function CategoryPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen p-8 pb-20 sm:p-20">
+    <div className="min-h-screen p-8 pb-20 sm:p-20 dark:bg-black">
       <div className="mb-8 flex items-center gap-4">
-        <Link href="/" className="text-blue-600 hover:text-blue-800">
-          ← Back to Home
-        </Link>
-        <h1 className="text-3xl font-bold text-gray-800">{decodeURIComponent(params.slug)}</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{decodeURIComponent(params.slug)}</h1>
       </div>
 
       <Suspense fallback={<div>Loading blogs...</div>}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {blogs.map((blog) => (
-            <BlogCard key={blog._id} blog={blog} />
+            <HomeCard key={blog._id} blog={blog} />
+
           ))}
         </div>
       </Suspense>
