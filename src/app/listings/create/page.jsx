@@ -96,7 +96,7 @@ export default function CreateListing() {
 
       const data = await res.json();
       if (data.success) {
-        router.push('/listings/my-listings');
+        router.push('/profile');
       } else {
         setError(data.message);
       }

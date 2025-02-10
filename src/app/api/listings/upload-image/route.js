@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { writeFile } from 'fs/promises';
 import { v2 as cloudinary } from 'cloudinary';
-import path from 'path';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -31,20 +29,24 @@ export async function POST(request) {
       );
     }
 
-    // Create a temporary file
+    // Convert file to base64
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const tempFilePath = path.join('/tmp', `${Date.now()}-${file.name}`);
-    await writeFile(tempFilePath, buffer);
+    const base64File = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(tempFilePath, {
-      folder: 'listings',
-      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-      transformation: [
-        { width: 800, height: 800, crop: 'limit' },
-        { quality: 'auto' }
-      ]
+    // Upload to Cloudinary using base64
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(base64File, {
+        folder: 'listings',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        transformation: [
+          { width: 800, height: 800, crop: 'limit' },
+          { quality: 'auto' }
+        ]
+      }, (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      });
     });
 
     return NextResponse.json({
